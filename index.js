@@ -34,10 +34,22 @@ app.get('/pegar_dados', function(req, res){
 })
 
 app.post('/deposito', function(req, res){ // http://127.0.0.1:3000/deposito
+  // Capturar/receber dados
   console.log(req.body)
   valor = req.body.valor
-  console.log("Valor: "+valor)
-  res.send("Teste de post! Valor: " + valor)
+  
+
+  // Regra de negócio
+  if (valor>0) {
+    valorAjustado = valor + 0.5  
+    // Response
+    console.log("Valor: "+ valorAjustado)
+    res.status(200).send("Teste de post! Valor: " + valorAjustado) 
+  } else {
+    // Response
+    console.log("Erro: o valor depositado é zero ou negativo")
+    res.status(400).send("Erro: o valor depositado é zero ou negativo")
+  }
 })
 
 
@@ -51,5 +63,7 @@ console.log("Servidor rodando")
 
 /**
  * https://www.npmjs.com/package/body-parser
+ * 
+ * Status code: https://expressjs.com/pt-br/api.html#res.sendStatus 
  * 
  */
