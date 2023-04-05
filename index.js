@@ -53,6 +53,57 @@ app.post('/deposito', function(req, res){ // http://127.0.0.1:3000/deposito
 })
 
 
+app.post('/bot_banco', function(req, res){
+  // 1 - Capturar os dados
+  console.log(req.body)
+  action = req.body.queryResult.action
+  console.log(action)
+
+  // 2 - Regra de negócio
+  if(action=="deposito"){
+    valor = req.body.queryResult.parameters.valor
+    console.log(valor)
+
+    if (valor>0) {
+      valorAjustado = valor + 0.5  
+
+      // 3 - Response
+      resposta = {
+        "fulfillmentMessages": [
+          {
+            "text": {
+              "text": [
+                "Deposito realizado com sucesso! Saldo: " + valorAjustado
+              ]
+            }
+          }
+        ]
+      }
+
+      console.log("Valor: "+ valorAjustado)
+      res.status(200).send(resposta) 
+
+    } else {
+      // 3 - Response
+      console.log("Erro: o valor depositado é zero ou negativo")
+      resposta = {
+        "fulfillmentMessages": [
+          {
+            "text": {
+              "text": [
+                "Erro: o valor depositado é zero ou negativo."
+              ]
+            }
+          }
+        ]
+      }
+
+      res.status(200).send(resposta)
+    }
+
+  }
+
+})
 
 // - - - - - Rodar o aplicativo - - - - - 
 app.listen(3000)
